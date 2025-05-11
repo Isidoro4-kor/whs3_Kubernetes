@@ -1,0 +1,22 @@
+<div style="max-width: 600px; margin: 0 auto;">
+
+    {% for message in messages %}
+      {% if message.sender_id == session['user_id'] %}
+        <!-- 내가 보낸 메시지 (왼쪽) -->
+        <div style="text-align: left; margin: 10px 0;">
+          <div style="display: inline-block; background-color: #cce5ff; color: #004085; padding: 10px 15px; border-radius: 20px 20px 20px 0; max-width: 70%;">
+            <strong>나:</strong> {{ message.text }}
+          </div>
+        </div>
+      {% else %}
+        <!-- 상대방이 보낸 메시지 (오른쪽) -->
+        <div style="text-align: right; margin: 10px 0;">
+          <div style="display: inline-block; background-color: #d4edda; color: #155724; padding: 10px 15px; border-radius: 20px 20px 0 20px; max-width: 70%;">
+            <strong>{{ message.sender.email }}:</strong> {{ message.text }}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  
+  </div>
+  

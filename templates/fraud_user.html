@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>비활성화된 계정</title>
+</head>
+<body style="background-color: white; text-align: center; padding-top: 100px;">
+
+  <h1 style="color: #dc3545;">사기 신고로 인해 계정이 비활성화되었습니다.</h1>
+
+  <br><br>
+
+  <!-- 로그아웃 버튼 (선택사항) -->
+  <form action="{{ url_for('logout') }}" method="GET">
+    <button type="submit" 
+      style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; font-size: 16px;">
+      로그아웃하고 메인으로
+    </button>
+  </form>
+
+</body>
+</html>

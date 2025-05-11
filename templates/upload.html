@@ -1,0 +1,31 @@
+<h2 style="text-align: center; margin-bottom: 20px;">물건 올리기</h2>
+
+<!-- 물건 등록 폼 -->
+<form method="POST" enctype="multipart/form-data" style="text-align: center; margin-bottom: 20px;">
+  <label>이름:</label><br>
+  <input type="text" name="name" required 
+    style="padding: 8px; width: 250px; border: 1px solid #ccc; border-radius: 5px;"><br><br>
+
+  <label>가격:</label><br>
+  <input type="number" name="price" required 
+    style="padding: 8px; width: 250px; border: 1px solid #ccc; border-radius: 5px;"><br><br>
+
+  <label>설명:</label><br>
+  <textarea name="description" rows="5" cols="50" required 
+    style="border-radius: 8px; padding: 10px; border: 1px solid #ccc;"></textarea><br><br>
+
+  <label>사진 업로드:</label><br>
+  <input type="file" name="image" accept="image/*" required 
+    style="margin-bottom: 20px;"><br>
+
+  <input type="submit" value="등록하기" 
+    style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px;">
+</form>
+
+<!-- 뒤로가기 버튼 -->
+<div style="text-align: center;">
+  <a href="{{ url_for('home') }}" 
+    style="display: inline-block; padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px;">
+    뒤로가기
+  </a>
+</div>

@@ -1,0 +1,142 @@
+<h2 style="text-align: center; margin-bottom: 20px;">{{ item.name }}</h2>
+
+<div style="text-align: center; margin-bottom: 20px;">
+  <img src="{{ url_for('static', filename='uploads/' + item.image) }}" width="300" style="border-radius: 8px;"><br><br>
+  <p><strong>가격:</strong> {{ item.price }}원</p>
+  <h3>업로더: <a href="{{ url_for('user_profile', user_id=uploader.id) }}">{{ uploader.email }}</a></h3>
+</div>
+
+<div style="text-align: center; margin-bottom: 20px;">
+  <p><strong>설명:</strong><br>{{ item.description }}</p>
+</div>
+
+<!-- 1대1 채팅 버튼과 신고 버튼 -->
+<div style="text-align: center; margin-bottom: 20px;">
+  {% if session.get('user_id') != uploader.id %}
+    <a href="{{ url_for('request_chat', user_id=uploader.id) }}" 
+      style="padding: 8px 16px; background-color: #17a2b8; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">
+      1대1 채팅 신청
+    </a>
+  {% endif %}
+
+  {% if current_user %}
+    <form method="GET" action="{{ url_for('report_item', item_id=item.id) }}" style="display:inline;">
+      <input type="submit" value="상품 신고하기" 
+        style="background-color: #ff4d4d; color: white; padding: 8px 16px; border: none; border-radius: 5px;">
+    </form>
+  {% endif %}
+</div>
+
+<!-- 업로더이거나 관리자(admin)이면 수정/삭제 버튼 -->
+<div style="text-align: center; margin-bottom: 30px;">
+  {% if current_user and (current_user.id == item.user_id or current_user.email == 'admin') %}
+    <form method="GET" action="{{ url_for('edit_item', item_id=item.id) }}" style="display:inline;">
+      <input type="submit" value="상품 수정" 
+        style="background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 5px; margin-right: 10px;">
+    </form>
+    <form method="POST" action="{{ url_for('delete_item', item_id=item.id) }}" style="display:inline;">
+      <input type="submit" value="상품 삭제" 
+        style="background-color: #dc3545; color: white; padding: 8px 16px; border: none; border-radius: 5px;">
+    </form>
+  {% endif %}
+</div>
+
+<hr>
+
+<!-- 댓글 섹션 -->
+<h3 style="text-align: center;">댓글</h3>
+
+{% for comment in comments %}
+  <div style="margin-left: {{ 20 * loop.depth0 }}px; border: 1px solid #ddd; padding: 10px; margin-top: 10px; border-radius: 8px; background-color: {% if comment.is_deleted %}#f0f0f0{% else %}#ffffff{% endif %};">
+    <p>
+      <strong>
+        {% if comment.user_id == item.user_id %}
+          판매자
+        {% else %}
+          {{ comment.user.email }}
+        {% endif %}
+      </strong> :
+      {% if comment.is_deleted %}
+        <em>삭제된 글 입니다.</em>
+      {% else %}
+        {{ comment.text }}
+      {% endif %}
+    </p>
+
+    {% if not comment.is_deleted and session.get('user_id') == comment.user_id %}
+      <form method="GET" action="{{ url_for('edit_comment', comment_id=comment.id) }}" style="display:inline;">
+        <input type="submit" value="수정" 
+          style="padding: 5px 10px; background-color: #ffc107; border: none; border-radius: 5px;">
+      </form>
+      <form method="POST" action="{{ url_for('delete_comment', comment_id=comment.id) }}" style="display:inline;">
+        <input type="submit" value="삭제" 
+          style="padding: 5px 10px; background-color: #dc3545; color: white; border: none; border-radius: 5px;">
+      </form>
+    {% endif %}
+
+    {% for child in comment.children %}
+      <div style="margin-left: 20px; margin-top: 8px; padding: 8px; border: 1px solid #ccc; border-radius: 8px; background-color: {% if child.is_deleted %}#f0f0f0{% else %}#ffffff{% endif %};">
+        <p>
+          <strong>
+            {% if child.user_id == item.user_id %}
+              판매자
+            {% else %}
+              {{ child.user.email }}
+            {% endif %}
+          </strong> :
+          {% if child.is_deleted %}
+            <em>삭제된 글 입니다.</em>
+          {% else %}
+            {{ child.text }}
+          {% endif %}
+        </p>
+
+        {% if not child.is_deleted and session.get('user_id') == child.user_id %}
+          <form method="GET" action="{{ url_for('edit_comment', comment_id=child.id) }}" style="display:inline;">
+            <input type="submit" value="수정" 
+              style="padding: 5px 10px; background-color: #ffc107; border: none; border-radius: 5px;">
+          </form>
+          <form method="POST" action="{{ url_for('delete_comment', comment_id=child.id) }}" style="display:inline;">
+            <input type="submit" value="삭제" 
+              style="padding: 5px 10px; background-color: #dc3545; color: white; border: none; border-radius: 5px;">
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <!-- 답글 입력 폼 -->
+    <form method="POST" style="margin-top: 10px;">
+      <input type="hidden" name="parent_id" value="{{ comment.id }}">
+      <textarea name="comment" rows="1" cols="50" placeholder="답글 입력..." required
+        style="border-radius: 8px; padding: 5px; border: 1px solid #ccc;"></textarea>
+      <input type="submit" value="답글 달기"
+        style="padding: 5px 10px; background-color: #17a2b8; color: white; border: none; border-radius: 5px;">
+    </form>
+  </div>
+{% else %}
+  <p style="text-align: center;">아직 댓글이 없습니다.</p>
+{% endfor %}
+
+{% if session.get('user_id') %}
+  <!-- 댓글 작성 폼 -->
+  <form method="POST" style="text-align: center; margin-top: 20px;">
+    <textarea name="comment" rows="2" cols="50" placeholder="댓글 입력..." required
+      style="border-radius: 8px; padding: 8px; border: 1px solid #ccc;"></textarea><br><br>
+    <input type="submit" value="댓글 달기"
+      style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px;">
+  </form>
+{% else %}
+  <p style="text-align: center; margin-top: 20px;">
+    <a href="{{ url_for('main') }}">로그인</a> 후 댓글을 작성할 수 있습니다.
+  </p>
+{% endif %}
+
+<hr>
+
+<!-- 홈으로 가기 버튼 -->
+<div style="text-align: center; margin-top: 30px;">
+  <a href="{{ url_for('home') }}" 
+    style="display: inline-block; padding: 10px 20px; background: #007BFF; color: white; text-decoration: none; border-radius: 5px;">
+    홈으로 가기
+  </a>
+</div>

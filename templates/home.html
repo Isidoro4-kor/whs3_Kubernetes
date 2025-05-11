@@ -1,0 +1,83 @@
+<h2 style="text-align: center; margin-bottom: 20px;">상품 목록</h2>
+
+<!-- 검색 폼 -->
+<form method="GET" action="{{ url_for('home') }}" style="text-align: center; margin-bottom: 20px;">
+  <input type="text" name="q" placeholder="상품 이름 검색" value="{{ search_query }}"
+    style="padding: 8px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+  <input type="submit" value="검색" 
+    style="padding: 8px 16px; background-color: #007BFF; color: white; border: none; border-radius: 5px;">
+</form>
+
+<!-- 관리자용 신고 관리 버튼 -->
+{% if current_user and current_user.email == 'admin' %}
+  <div style="text-align: center; margin-bottom: 20px;">
+    <a href="{{ url_for('reports') }}" 
+      style="padding: 10px 20px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 5px;">
+      신고 관리 페이지
+    </a>
+  </div>
+{% endif %}
+
+<!-- 업로드, 마이페이지 버튼 -->
+<div style="text-align: center; margin-bottom: 20px;">
+  <a href="{{ url_for('upload') }}" 
+    style="padding: 8px 16px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">
+    물건 올리기
+  </a>
+  <a href="{{ url_for('my_profile') }}" 
+    style="padding: 8px 16px; background-color: #17a2b8; color: white; text-decoration: none; border-radius: 5px;">
+    마이페이지
+  </a>
+</div>
+
+<hr>
+
+<!-- 물건 목록 -->
+<div style="display: flex; flex-wrap: wrap; justify-content: center;">
+  {% for item in items %}
+    <a href="{{ url_for('item_detail', item_id=item.id) }}" 
+      style="border: 1px solid #ccc; border-radius: 10px; padding: 10px; margin: 10px; text-decoration: none; color: inherit; width: 220px; text-align: center;">
+      <h3>{{ item.name }}</h3>
+      <img src="{{ url_for('static', filename='uploads/' + item.image) }}" width="200" style="border-radius: 8px;"><br><br>
+      <strong>{{ item.price }}원</strong>
+    </a>
+  {% endfor %}
+</div>
+
+<div style="text-align: center; margin-top: 20px;">
+  <a href="{{ url_for('logout') }}" 
+    style="padding: 8px 16px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px;">
+    로그아웃
+  </a>
+</div>
+
+<hr>
+
+<!-- 채팅 공간 -->
+<h3 style="text-align: center;">채팅</h3>
+<div id="chat-container" style="height: 200px; overflow-y: scroll; border: 1px solid #ccc; border-radius: 10px; padding: 10px; margin: 0 auto 20px auto; width: 80%;">
+  {% for chat in chats %}
+    <p><strong>{{ chat.sender.email }}:</strong> {{ chat.text }}</p>
+  {% endfor %}
+</div>
+
+<!-- 채팅 입력 폼 -->
+<form method="POST" style="text-align: center;">
+  <textarea name="chat" rows="3" cols="50" placeholder="채팅을 입력하세요..." required
+    style="border-radius: 8px; padding: 10px; border: 1px solid #ccc;"></textarea><br><br>
+  <input type="submit" value="채팅 보내기"
+    style="padding: 10px 20px; background-color: #ffc107; color: black; border: none; border-radius: 5px;">
+</form>
+
+<!-- 채팅 스크롤 맨 아래로 이동 스크립트 -->
+<script>
+  window.onload = function() {
+    var chatContainer = document.getElementById('chat-container');
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  };
+
+  window.addEventListener('DOMContentLoaded', (event) => {
+    var chatContainer = document.getElementById('chat-container');
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  });
+</script>

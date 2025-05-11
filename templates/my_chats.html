@@ -1,0 +1,23 @@
+<h2 style="text-align: center; margin-bottom: 20px;">내 채팅방</h2>
+
+<!-- 채팅방 목록 -->
+<div style="max-width: 600px; margin: 0 auto;">
+  {% for chatroom in chatrooms %}
+    <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center;">
+      <h4 style="margin: 0;">
+        <a href="{{ url_for('chat_room', chatroom_id=chatroom.id) }}" 
+          style="text-decoration: none; color: #007BFF;">
+          {{ chatroom.user1.email }} - {{ chatroom.user2.email }}
+        </a>
+      </h4>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- 내 프로필로 돌아가기 버튼 -->
+<div style="text-align: center; margin-top: 20px;">
+  <a href="{{ url_for('my_profile') }}" 
+    style="display: inline-block; padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px;">
+    내 프로필로 돌아가기
+  </a>
+</div>

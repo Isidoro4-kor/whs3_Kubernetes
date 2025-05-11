@@ -1,0 +1,43 @@
+<h2 style="text-align: center; margin-bottom: 20px;">
+    채팅방: {{ chatroom.user1.email }} - {{ chatroom.user2.email }}
+  </h2>
+  
+  <!-- 채팅 메시지 표시하는 영역 -->
+  <div id="chat-container" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; border-radius: 10px; padding: 10px; margin-bottom: 20px;">
+    {% for message in messages %}
+      <div style="margin-bottom: 10px;">
+        <!-- 보낸 사람 이메일과 메시지 출력 -->
+        <p style="margin: 5px 0;">
+          <strong>{{ message.sender.email }}:</strong> {{ message.text }}
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+  
+  <!-- 메시지 보내는 폼 -->
+  <form method="POST" style="text-align: center; margin-bottom: 20px;">
+    <textarea name="message" rows="3" cols="50" placeholder="메시지를 입력하세요..." required
+      style="border-radius: 8px; padding: 8px; border: 1px solid #ccc;"></textarea><br><br>
+    <input type="submit" value="전송" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px;">
+  </form>
+  
+  <!-- 홈으로 돌아가는 버튼 -->
+  <div style="text-align: center;">
+    <a href="{{ url_for('home') }}" style="display: inline-block; margin-top: 10px; padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 5px;">
+      홈으로 가기
+    </a>
+  </div>
+  
+  <!-- 페이지 로드 시 스크롤을 가장 아래로 이동하는 스크립트 -->
+  <script>
+    window.onload = function() {
+      var chatContainer = document.getElementById('chat-container');
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    };
+  
+    window.addEventListener('DOMContentLoaded', (event) => {
+      var chatContainer = document.getElementById('chat-container');
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    });
+  </script>
+  

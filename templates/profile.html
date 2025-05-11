@@ -1,0 +1,77 @@
+<h2 style="text-align: center; margin-bottom: 20px;">
+    {% if is_own_profile %}마이페이지{% else %}{{ user.email }}의 페이지{% endif %}
+  </h2>
+  
+  <div style="text-align: center; margin-bottom: 20px;">
+    <p><strong>이름:</strong> {{ user.email }}</p>
+    <p><strong>소개글:</strong> {{ user.bio or '소개글이 없습니다.' }}</p>
+  </div>
+  
+  <!-- 유저 신고 버튼 (내 프로필이 아닐 때만) -->
+  {% if not is_own_profile and current_user %}
+    <div style="text-align: center; margin-bottom: 20px;">
+      <form method="GET" action="{{ url_for('report_user', user_id=user.id) }}">
+        <input type="submit" value="이 사용자 신고하기" 
+          style="padding: 8px 16px; background-color: #ff4d4d; color: white; border: none; border-radius: 5px;">
+      </form>
+    </div>
+  {% endif %}
+  
+  <!-- 관리자(admin)만 사기유저 전환/복구 버튼 -->
+  {% if current_user and current_user.email == 'admin' %}
+    <div style="text-align: center; margin-bottom: 20px;">
+      {% if user.is_fraud %}
+        <form method="POST" action="{{ url_for('restore_user', user_id=user.id) }}">
+          <input type="submit" value="일반 유저로 복구" 
+            style="padding: 8px 16px; background-color: #28a745; color: white; border: none; border-radius: 5px;">
+        </form>
+      {% else %}
+        <form method="POST" action="{{ url_for('mark_fraud_user', user_id=user.id) }}">
+          <input type="submit" value="사기유저로 전환" 
+            style="padding: 8px 16px; background-color: #dc3545; color: white; border: none; border-radius: 5px;">
+        </form>
+      {% endif %}
+    </div>
+  {% endif %}
+  
+  <hr>
+  
+  <!-- 등록한 상품 목록 -->
+  <h3 style="text-align: center;">등록한 상품 목록</h3>
+  <ul style="max-width: 600px; margin: 0 auto 20px auto; list-style-type: none; padding: 0;">
+    {% for item in items %}
+      <li style="margin-bottom: 10px; text-align: center;">
+        <a href="{{ url_for('item_detail', item_id=item.id) }}" 
+          style="text-decoration: none; color: #007BFF;">{{ item.name }}</a> - {{ item.price }}원
+      </li>
+    {% endfor %}
+  </ul>
+  
+  <!-- 프로필 수정 폼 (내 프로필일 때만) -->
+  {% if is_own_profile %}
+  <hr>
+  <h3 style="text-align: center;">프로필 수정</h3>
+  <form method="POST" action="{{ url_for('my_profile') }}" style="text-align: center; margin-bottom: 20px;">
+    <label>소개글:</label><br>
+    <textarea name="bio" rows="4" cols="50" 
+      style="border-radius: 8px; padding: 10px; border: 1px solid #ccc;">{{ user.bio }}</textarea><br><br>
+  
+    <label>새 비밀번호:</label><br>
+    <input type="password" name="password" 
+      style="border-radius: 8px; padding: 8px; border: 1px solid #ccc;"><br><br>
+  
+    <input type="submit" value="수정하기" 
+      style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px;">
+  </form>
+  {% endif %}
+  
+  <hr>
+  
+  <!-- 홈으로 가기 버튼 -->
+  <div style="text-align: center; margin-top: 20px;">
+    <a href="{{ url_for('home') }}" 
+      style="display: inline-block; padding: 10px 20px; background: #007BFF; color: white; text-decoration: none; border-radius: 5px;">
+      홈으로
+    </a>
+  </div>
+  

@@ -1,0 +1,56 @@
+<h2 style="text-align: center; margin-bottom: 20px;">신고 목록</h2>
+
+<!-- 신고 목록 출력 -->
+<div style="max-width: 800px; margin: 0 auto;">
+  {% for report in reports %}
+    <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; margin-bottom: 15px;">
+      <p><strong>신고자:</strong> {{ report.reporter.email }}</p>
+
+      {% if report.reported_item %}
+        <p><strong>신고 대상 상품:</strong> 
+          <a href="{{ url_for('item_detail', item_id=report.reported_item.id) }}" style="color: #007BFF;">
+            {{ report.reported_item.name }}
+          </a>
+        </p>
+      {% elif report.reported_user %}
+        <p><strong>신고 대상 사용자:</strong> 
+          <a href="{{ url_for('user_profile', user_id=report.reported_user.id) }}" style="color: #007BFF;">
+            {{ report.reported_user.email }}
+          </a>
+        </p>
+      {% endif %}
+
+      <p><strong>사유:</strong> {{ report.reason }}</p>
+      <p><strong>시간:</strong> {{ report.timestamp }}</p>
+    </div>
+  {% else %}
+    <p style="text-align: center;">아직 신고가 없습니다.</p>
+  {% endfor %}
+</div>
+
+<hr style="margin: 40px 0;">
+
+<h2 style="text-align: center; margin-bottom: 20px;">사기유저 목록</h2>
+
+<!-- 사기유저 목록 출력 -->
+<div style="max-width: 800px; margin: 0 auto;">
+  {% for fraud_user in fraud_users %}
+    <div style="border: 1px solid red; border-radius: 8px; padding: 10px; margin-bottom: 15px;">
+      <p><strong>이메일:</strong> {{ fraud_user.email }}</p>
+      <p>
+        <a href="{{ url_for('user_profile', user_id=fraud_user.id) }}" 
+          style="color: #dc3545; text-decoration: none;">프로필 보기</a>
+      </p>
+    </div>
+  {% else %}
+    <p style="text-align: center;">사기유저가 없습니다.</p>
+  {% endfor %}
+</div>
+
+<!-- 홈으로 돌아가기 버튼 -->
+<div style="text-align: center; margin-top: 30px;">
+  <a href="{{ url_for('home') }}" 
+    style="display: inline-block; padding: 10px 20px; background: #007BFF; color: white; text-decoration: none; border-radius: 5px;">
+    홈으로 돌아가기
+  </a>
+</div>

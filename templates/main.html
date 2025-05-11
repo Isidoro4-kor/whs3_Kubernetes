@@ -1,0 +1,23 @@
+<h2 style="text-align: center; margin-bottom: 20px;">로그인</h2>
+
+<!-- 로그인 폼 -->
+<form method="POST" style="text-align: center; margin-bottom: 20px;">
+  <label>이메일:</label><br>
+  <input type="text" name="email" required 
+    style="padding: 8px; width: 250px; border: 1px solid #ccc; border-radius: 5px;"><br><br>
+
+  <label>비밀번호:</label><br>
+  <input type="password" name="password" required 
+    style="padding: 8px; width: 250px; border: 1px solid #ccc; border-radius: 5px;"><br><br>
+
+  <input type="submit" value="로그인" 
+    style="padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px;">
+</form>
+
+<!-- 회원가입 링크 -->
+<div style="text-align: center;">
+  <a href="{{ url_for('register') }}" 
+    style="display: inline-block; padding: 8px 16px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px;">
+    회원가입
+  </a>
+</div>
